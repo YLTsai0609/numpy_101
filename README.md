@@ -5,9 +5,9 @@
 
 鍛煉Numpy最好的方法 : 
 
-1. You should 看別人的code，增加背景知識。
+You should......  看別人的code，增加背景知識。
 
-2. You Must 自己寫，並考慮更好的寫法。
+You must......    自己寫，並考慮更好的寫法。
 從[numpy 101](https://www.machinelearningplus.com/python/101-numpy-exercises-python/)鍛鍊出一個更好的自己
 
 既然推薦自己寫，為何還會有這個 repository?
