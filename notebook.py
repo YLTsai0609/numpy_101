@@ -16,13 +16,13 @@
 
 # ## There are alternative solution and hits: 
 # ### more readable
-#  > 26, 27
+#  > 26, 27, 38
 # ### more effient (vectorlized)
-#  > 16, 19, 24
+#  > 
 #  ### when to use it?
-#  > 9, 15
+#  > 9, 15, 16
 #  ### hints
-#  > 5, 7, 20, 21, 30
+#  > 5, 7, 20, 21, 24, 30
 
 import numpy as np
 np.random.seed(seed=42)
@@ -413,6 +413,92 @@ iris_2d = np.genfromtxt(url, delimiter=',', dtype='float')
 iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
 
 
+# +
+# 34. How to filter a numpy array based on two or more conditions?
+# Difficulty Level: L3
+
+# Q. Filter the rows of iris_2d that has petallength (3rd column) > 1.5 and sepallength (1st column) < 5.0
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+
+condition = (iris_2d[:, 2] > 1.5) & (iris_2d[:, 0] < 5.0)
+iris_2d[condition][:5]
+
+
+# +
+# 35. How to drop rows that contain a missing value from a numpy array?
+# Difficulty Level: L3:
+# Q. Select the rows of iris_2d that does not have any nan value.
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
+
+# mask or np.where
+# np.isnan will flattern our 2d-array
+# so followed will return shape = 600
+# condintion = ~ np.isnan(iris_2d)
+# iris_2d[condintion].shape
+
+# then we do it by rowise
+mask = [~ np.any(np.isnan(row)) for row in iris_2d]
+print(iris_2d[mask].shape)
+iris_2d[mask][:5]
+
+# +
+# 36. How to find the correlation between two columns of a numpy array?
+# Difficulty Level: L2
+# Q. Find the correlation between SepalLength(1st column) and PetalLength(3rd column) in iris_2d
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+
+np.corrcoef(iris_2d[:, 0], iris_2d[:, 2])
+
+# +
+# 37. How to find if a given array has any null values?
+# Difficulty Level: L2
+# iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
+
+np.isnan(iris_2d).any()
+
+
+
+# -
+
+
+
+# +
+# 38. How to replace all missing values with 0 in a numpy array?
+# Difficulty Level: L2
+
+# Q. Replace all ccurrences of nan with 0 in numpy array
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris_2d = np.genfromtxt(url, delimiter=',', dtype='float', usecols=[0,1,2,3])
+iris_2d[np.random.randint(150, size=20), np.random.randint(4, size=20)] = np.nan
+
+
+# More readable 
+iris_2d = np.where(np.isnan(iris_2d), 0, iris_2d)
+print(np.isnan(iris_2d).any())
+
+
+# +
+# 39. How to find the count of unique values in a numpy array?
+# Difficulty Level: L2
+
+# Q. Find the unique values and the count of unique values in iris's species
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris = np.genfromtxt(url, delimiter=',', dtype='object')
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+
+iris[:5]
 # -
 
 
