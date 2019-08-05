@@ -18,11 +18,11 @@
 # ### more readable
 #  > 26, 27, 38
 # ### more effient (vectorlized)
-#  > 
+#  > 40
 #  ### when to use it?
 #  > 9, 15, 16
 #  ### hints
-#  > 5, 7, 20, 21, 24, 30
+#  > 5, 7, 20, 21, 24, 30, 40, 42
 
 import numpy as np
 np.random.seed(seed=42)
@@ -498,7 +498,111 @@ url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
 iris = np.genfromtxt(url, delimiter=',', dtype='object')
 names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
 
-iris[:5]
+
+np.unique(iris[:, -1], return_counts=True)
+
+
+# +
+# 40. How to convert a numeric to a categorical (text) array?
+# Difficulty Level: L2
+
+# Q. Bin the petal length (3rd) column of iris_2d to form a text array, such that if petal length is:
+
+# Less than 3 --> 'small'
+# 3-5 --> 'medium'
+# '>=5 --> 'large'
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris = np.genfromtxt(url, delimiter=',', dtype='object')
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+
+# Vectorlized
+
+bins = np.array([0, 3, 5, 100])
+def label_map(x):
+    if x == 1:
+        return 'small'
+    elif x == 2:
+        return 'medium'
+    elif x == 3:
+        return 'large'
+    else:
+        return np.nan
+tmp = np.digitize(iris[:, 2].astype(float), bins)
+v_label_map = np.vectorize(label_map)
+v_label_map(tmp)[:5]
+
+# Hint
+# the comparision below when your data is really large
+# use dictionary and list-comprehension
+
+
+
+# +
+# test_arr = np.random.randint(low=1, high=4, size=5000000)
+# -
+
+# # %%time
+# label_map = {1 : 'small', 2 : 'medium', 3:'large'}
+# result = [label_map[element] for element in test_arr]
+# took 1.71s on my mac-air
+
+
+# +
+# # %%time
+# def label_map(x):
+#     if x == 1:
+#         return 'small'
+#     elif x == 2:
+#         return 'medium'
+#     elif x == 3:
+#         return 'large'
+#     else:
+#         return np.nan
+# v_label_map = np.vectorize(label_map)
+# v_label_map(tmp)
+# took 191 µs o my mac-air
+
+# A brief report no stackoverflow
+# https://stackoverflow.com/questions/35215161/most-efficient-way-to-map-function-over-numpy-array
+# -
+
+
+
+
+
+# +
+# 41. How to create a new column from existing columns of a numpy array?
+# Difficulty Level: L2
+
+# Q. Create a new column for volume in iris_2d, where volume is (pi x petallength x sepal_length^2)/3
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris_2d = np.genfromtxt(url, delimiter=',', dtype='object')
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+pi = np.pi
+
+result = pi * iris_2d[:, 2].astype(float) * (iris_2d[:, 0].astype(float) ** 2) / 3
+result[:5]
+
+# +
+# 42. How to do probabilistic sampling in numpy?
+# Difficulty Level: L3
+    
+# Q. Randomly sample iris's species such that setose is twice the number of versicolor and virginica
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris = np.genfromtxt(url, delimiter=',', dtype='object')
+
+
+spcies_unq = np.unique(iris[:, -1])
+p = [0.5, 0.25, 0.25]
+result = np.random.choice(spcies_unq, size=100, p=p)
+print('result array distribution :',np.unique(result, return_counts=True))
+
+# hint
+# you could see sampling documentation 
+# https://docs.scipy.org/doc/numpy-1.16.0/reference/routines.random.html
+
 # -
 
 
