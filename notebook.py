@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.4'
-#       jupytext_version: 1.1.6
+#       jupytext_version: 1.1.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -16,13 +16,13 @@
 
 # ## There are alternative solution and hits: 
 # ### more readable
-#  > 26, 27, 38
+#  > 26, 27, 38, 48
 # ### more effient (vectorlized)
 #  > 40
 #  ### when to use it?
-#  > 9, 15, 16
+#  > 9, 15, 16, 44, 45, 46
 #  ### hints
-#  > 5, 7, 20, 21, 24, 30, 40, 42
+#  > 5, 7, 20, 21, 24, 30, 40, 42, 43, 45
 
 import numpy as np
 np.random.seed(seed=42)
@@ -603,6 +603,130 @@ print('result array distribution :',np.unique(result, return_counts=True))
 # you could see sampling documentation 
 # https://docs.scipy.org/doc/numpy-1.16.0/reference/routines.random.html
 
+# +
+# 43. How to get the second largest value of an array when grouped by another array?
+# Difficulty Level: L2
+
+# Q. What is the value of second longest petallength of species setosa
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris = np.genfromtxt(url, delimiter=',', dtype='object')
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+
+condition = iris[:, -1] == b'Iris-setosa'
+
+tmp = iris[condition, 2].astype(float)
+np.unique(np.sort(tmp))[-2]
+
+# hint
+# numpy中並沒有像pd.Series一樣有ascending選項
+
+
+# +
+# 44. How to sort a 2D array by a column
+# Difficulty Level: L2
+
+# Q. Sort the iris dataset based on sepallength column.
+
+
+# More readable
+# use name-filed
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+dtype=[('sepallength', '<f8'), ('sepalwidth', '<f8'),
+       ('petallength', '<f8'), ('petalwidth', '<f8')
+       ,('species', 'object')]
+
+iris = np.genfromtxt(url, delimiter=',',names=names,
+                    dtype = dtype)
+np.sort(iris, order=['sepallength'])[:5]
+
+# +
+# 45. How to find the most frequent value in a numpy array?
+# Difficulty Level: L1
+
+# Q. Find the most frequent value of petal length (3rd column) in iris dataset.
+
+# More readable
+# name field
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+dtype=[('sepallength', '<f8'), ('sepalwidth', '<f8'),
+       ('petallength', '<f8'), ('petalwidth', '<f8')
+       ,('species', 'object')]
+
+iris = np.genfromtxt(url, delimiter=',',names=names,
+                    dtype = dtype)
+
+vals_arr, counts_arr = np.unique(iris['petallength'], return_counts=True)
+
+vals_arr[np.argmax(counts_arr)]
+
+# Hint
+# 函數回傳結果為turple時，
+# 用兩個變數接收結果
+
+# +
+# 46. How to find the position of the first occurrence of a value greater than a given value?
+# Difficulty Level: L2
+
+# Q. Find the position of the first occurrence of a value greater than 1.0 in petalwidth 4th column of iris dataset.
+
+# More readable
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+dtype=[('sepallength', '<f8'), ('sepalwidth', '<f8'),
+       ('petallength', '<f8'), ('petalwidth', '<f8')
+       ,('species', 'object')]
+
+iris = np.genfromtxt(url, delimiter=',',names=names,
+                    dtype = dtype)
+
+np.argwhere(iris['petalwidth'] > 1.0)[0]
+
+# +
+# 47. How to replace all values greater than a given value to a given cutoff?
+# Difficulty Level: L2
+
+# Q. From the array a, replace all values greater than 30 to 30 and less than 10 to 10.
+
+np.random.seed(100)
+a = np.random.uniform(1,50, 20)
+
+# 巢狀np.where
+# 若 a > 30, 則換成30, 若 < 30, 執行另一函式
+# 另一函式 : a < 10, 換成 10, 否, 為原本值
+# 用途廣泛
+np.where( a > 30, 
+              30, 
+          np.where(a < 10,
+                       10,
+                       a))
+# clip
+# when to use
+# 純數字，取中間時
+np.clip(a, a_min=10, a_max=30)[:5]
+
+# +
+# 48. How to get the positions of top n values from a numpy array?
+# Difficulty Level: L2
+
+# Q. Get the positions of top 5 maximum values in a given array a.
+
+np.random.seed(100)
+a = np.random.uniform(1,50, 20)
+
+np.argsort(a)[-5:]
+
+# Hint
+# 條件 : 找值
+# np.where 返回整個array的值
+# np.argwhere 返回index
+# 排序
+# np.sort 值排序
+# np.argsort 值排序，返回index
+# When to use
+# Eg. 返回特徵重要度最大的index, 用於取出特徵欄位
 # -
 
 
