@@ -16,7 +16,7 @@
 
 # ## There are alternative solution and hits: 
 # ### more readable
-#  > 26, 27, 38, 48
+#  > 26, 27, 38, 48, 49, 50
 # ### more effient (vectorlized)
 #  > 40
 #  ### when to use it?
@@ -727,6 +727,50 @@ np.argsort(a)[-5:]
 # np.argsort 值排序，返回index
 # When to use
 # Eg. 返回特徵重要度最大的index, 用於取出特徵欄位
+# + {}
+# 49. How to compute the row wise counts of all possible values in an array?
+# Difficulty Level: L4
+# Q. Compute the counts of unique values row-wise.
+np.random.seed(100)
+arr = np.random.randint(1,11,size=(6, 10))
+
+# More readable
+result = np.zeros_like(arr)
+for row in range(arr.shape[0]):
+    unq_arr, count_arr = np.unique(arr[row, :], return_counts=True)
+    result[row, :][unq_arr - 1] = count_arr
+
+
+result.tolist()
+
+
+# +
+# 50. How to convert an array of arrays into a flat 1d array?
+# Difficulty Level: 2
+
+# Q. Convert array_of_arrays into a flat linear 1d array.
+arr1 = np.arange(3)
+arr2 = np.arange(3,7)
+arr3 = np.arange(7,10)
+
+array_of_arrays = np.array([arr1, arr2, arr3])
+# More readable
+np.hstack(array_of_arrays)
+
+# +
+# 51. How to generate one-hot encodings for an array in numpy?
+# Difficulty Level L4
+
+# Q. Compute the one-hot encodings (dummy binary variables for each unique value in the array)
+np.random.seed(101) 
+arr = np.random.randint(1,4, size=6)
+one_hot_feature = np.unique(arr)
+one_hot_arr = np.zeros(shape=(arr.shape[0], one_hot_feature.shape[0]))
+
+for i, k in enumerate(arr):
+    one_hot_arr[i, k-1] = 1
+
+one_hot_arr
 # -
 
 
