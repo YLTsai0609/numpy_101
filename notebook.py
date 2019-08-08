@@ -16,7 +16,7 @@
 
 # ## There are alternative solution and hits: 
 # ### more readable
-#  > 26, 27, 38, 48, 49, 50
+#  > 26, 27, 38, 48, 49, 50, 52, 53
 # ### more effient (vectorlized)
 #  > 40
 #  ### when to use it?
@@ -771,6 +771,111 @@ for i, k in enumerate(arr):
     one_hot_arr[i, k-1] = 1
 
 one_hot_arr
+# + {}
+# 52. How to create row numbers grouped by a categorical variable?
+# Difficulty Level: L3
+
+# Q. Create row numbers grouped by a categorical variable. Use the following sample from iris species as input.
+
+
+species = np.genfromtxt(url, delimiter=',', dtype='str', usecols=4)
+species_small = np.sort(np.random.choice(species, size=20))
+species_small
+
+np.unique(species_small)
+
+# More readable
+
+def get_groupby_index(arr):
+    unq = np.unique(arr)
+    result = []
+    for species_item in unq:
+        filtered_arr = arr[arr == species_item]
+        for idx in range(len(filtered_arr)):
+            result.append(idx)
+    return result
+
+get_groupby_index(species_small)
+
+
+# +
+# 53. How to create groud ids based on a given categorical variable?
+# Difficulty Level: L4
+
+# Q. Create group ids based on a given categorical variable. Use the following sample from iris species as input.
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+species = np.genfromtxt(url, delimiter=',', dtype='str', usecols=4)
+species_small = np.sort(np.random.choice(species, size=20))
+species_small
+
+# More readable
+
+def get_groupby_index(arr):
+    unq = np.unique(arr)
+    result = []
+    for group_idx ,species_item in enumerate(unq):
+        filtered_arr = arr[arr == species_item]
+        group_idx_list = [group_idx for i in filtered_arr]
+        result.extend(group_idx_list)
+    return result
+
+get_groupby_index(species_small)
+
+
+# +
+# 54. How to rank items in an array using numpy?
+# Difficulty Level: L2
+
+# Q. Create the ranks for the given numeric array a.
+
+np.random.seed(10)
+a = np.random.randint(20, size=10)
+print(a)
+a.argsort().argsort()
+# -
+
+np.random.seed(10)
+a = np.random.randint(20, size=[2,5])
+print(a.ravel().argsort().argsort().reshape(a.shape))
+
+# +
+# 56. How to find the maximum value in each row of a numpy array 2d?
+# DifficultyLevel: L2
+
+# Q. Compute the maximum for each row in the given array.
+
+np.random.seed(100)
+a = np.random.randint(1,10, [5,3])
+
+a.max(axis=1)
+
+
+
+# +
+# 57. How to compute the min-by-max for each row for a numpy array 2d?
+# DifficultyLevel: L3
+
+# Q. Compute the min-by-max for each row for given 2d numpy array.
+np.random.seed(100)
+a = np.random.randint(1,10, [5,3])
+
+a.min(axis=1) / a.max(axis=1)
+
+
+
+# +
+# 58. How to find the duplicate records in a numpy array?
+# Difficulty Level: L3
+
+# Q. Find the duplicate entries (2nd occurrence onwards) in the given numpy array and mark them as True. First time occurrences should be False.
+np.random.seed(100)
+a = np.random.randint(0, 5, 10)
+print('Array: ', a)
+result = np.full(a.shape[0], True)
+unq, unq_idx = np.unique(a, return_index=True)
+result[unq_idx] = False
+print(result)
 # -
 
 
