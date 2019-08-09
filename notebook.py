@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.4'
-#       jupytext_version: 1.1.3
+#       jupytext_version: 1.1.6
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -16,13 +16,13 @@
 
 # ## There are alternative solution and hits: 
 # ### more readable
-#  > 26, 27, 38, 48, 49, 50, 52, 53
+#  > 26, 27, 38, 48, 49, 50, 52, 53, 63
 # ### more effient (vectorlized)
 #  > 40
 #  ### when to use it?
 #  > 9, 15, 16, 44, 45, 46
 #  ### hints
-#  > 5, 7, 20, 21, 24, 30, 40, 42, 43, 45
+#  > 5, 7, 20, 21, 24, 30, 40, 42, 43, 45, 66
 
 import numpy as np
 np.random.seed(seed=42)
@@ -876,6 +876,113 @@ result = np.full(a.shape[0], True)
 unq, unq_idx = np.unique(a, return_index=True)
 result[unq_idx] = False
 print(result)
+# + {}
+# 59
+
+# +
+# 60. How to convert a PIL image to numpy array?
+# Difficulty Level: L3
+
+# Q. Import the image from the following URL and convert it to a numpy array.
+
+URL = 'https://upload.wikimedia.org/wikipedia/commons/8/8b/Denali_Mt_McKinley.jpg'
+from PIL import Image
+import requests
+from io import BytesIO
+response = requests.get(URL)
+image = Image.open(BytesIO(response.content))
+image_arr = np.array(image)
+print(image_arr.shape)
+
+# Optionaly Convert it back to an image and show
+# im = PIL.Image.fromarray(np.uint8(arr))
+# Image.Image.show(im)
+
+
+
+# +
+# 61. How to drop all missing values from a numpy array?
+# Difficulty Level: L2
+
+# Q. Drop all nan values from a 1D numpy array
+
+arr = np.array([1,2,3,np.nan,5,6,7,np.nan])
+arr[~ np.isnan(arr)]
+
+# +
+# 62. How to compute the euclidean distance between two arrays?
+# Difficulty Level: L3
+
+# Q. Compute the euclidean distance between two arrays a and b.
+
+a = np.array([1,2,3,4,5])
+b = np.array([4,5,6,7,8])
+a = a.reshape(1, -1)
+b = b.reshape(1, -1)
+from scipy.spatial.distance import cdist as dist
+dist(a,b, metric='euclidean')
+
+# +
+# 63. How to find all the local maxima (or peaks) in a 1d array?
+# Difficulty Level: L4
+
+# Q. Find all the peaks in a 1D numpy array a. Peaks are points surrounded by smaller values on both sides.
+
+a = np.array([1, 3, 7, 1, 2, 6, 0, 1])
+
+
+# More readable
+def get_peak(arr, forward_diff,back_diff):
+    def get_backword(arr, back_diff):
+        import pandas as pd 
+        return pd.Series(arr).diff(-1).values
+    forward = np.sign(np.diff(a, n=forward_diff, prepend=np.nan) )
+    backward = np.sign(get_backword(arr, back_diff))
+    return np.argwhere((forward > 0) & (backward > 0)).reshape(-1)
+    
+peak_pos = get_peak(a, forward_diff=1, back_diff=1)
+peak_pos
+
+# +
+# 64. How to subtract a 1d array from a 2d array, where each item of 1d array subtracts from respective row?
+# Difficulty Level: L2
+
+# Q. Subtract the 1d array b_1d from the 2d array a_2d, such that each item of b_1d subtracts from respective row of a_2d.
+
+a_2d = np.array([[3,3,3],[4,4,4],[5,5,5]])
+b_1d = np.array([1,1,1])
+a_2d - b_1d
+
+
+
+# +
+# 65. How to find the index of n'th repetition of an item in an array
+# Difficulty Level L2
+
+x = np.array([1, 2, 1, 1, 3, 4, 3, 1, 1, 2, 1, 1, 2])
+
+def get_n_repetition_idx(arr, value, capture):
+    tmp = x.copy()
+    value_repetition = np.cumsum(x[x == value])
+    result = np.argwhere(value_repetition == capture).reshape(-1)
+    return result
+get_n_repetition_idx(x, 1, 5)
+
+# +
+# 66. How to convert numpy's datetime64 object to datetime's datetime object?
+# Difficulty Level: L2
+
+# Q. Convert numpy's datetime64 object to datetime's datetime object
+from datetime import datetime
+dt64 = np.datetime64('2018-02-25 22:10:10')
+dt64.astype(datetime)
+
+# Hint
+# 使用 print(dir(dt64)) 來找出可使用的方法及屬性
+# datetime物件經常是很麻煩的處理, numpy的documentation可以在這裡找到
+# https://docs.scipy.org/doc/numpy-1.15.0/reference/arrays.datetime.html
+
+
 # -
 
 
