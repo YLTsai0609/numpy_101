@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.4'
-#       jupytext_version: 1.1.6
+#       jupytext_version: 1.1.3
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -16,7 +16,7 @@
 
 # ## There are alternative solution and hits: 
 # ### more readable
-#  > 26, 27, 38, 48, 49, 50, 52, 53, 63
+#  > 26, 27, 38, 48, 49, 50, 52, 53, 63, 67
 # ### more effient (vectorlized)
 #  > 40
 #  ### when to use it?
@@ -878,6 +878,31 @@ result[unq_idx] = False
 print(result)
 # + {}
 # 59
+# Difficulty Level L3
+
+# Q. Find the mean of a numeric column grouped by a categorical column in a 2D numpy array
+
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+dtype=[('sepallength', '<f8'), ('sepalwidth', '<f8'),
+       ('petallength', '<f8'), ('petalwidth', '<f8')
+       ,('species', 'object')]
+
+iris = np.genfromtxt(url, delimiter=',',names=names,
+                    dtype = dtype)
+
+# More readable
+def groupby_numpy_mean(arr, by, caculate_col):
+    uniuqe_species = np.unique(iris[by])
+    result = []
+    for unq in uniuqe_species:
+        unq_mean = iris[iris[by] == unq][caculate_col].mean()
+        result.append(
+        [unq, unq_mean]
+        )
+    return result
+
+groupby_numpy_mean(iris, by='species', caculate_col='sepallength')
 
 # +
 # 60. How to convert a PIL image to numpy array?
@@ -983,6 +1008,32 @@ dt64.astype(datetime)
 # https://docs.scipy.org/doc/numpy-1.15.0/reference/arrays.datetime.html
 
 
-# -
+# +
+# 67. How to compute the moving average of a numpy array?
+# Difficulty Level: L3
+
+# Q. Compute the moving average of window size 3, for the given 1D array.
+
+np.random.seed(100)
+Z = np.random.randint(10, size=10)
+
+# more readable
+def moving_average(arr, window):
+    result = np.array([])
+    for idx in range(arr.shape[0] - window):
+        span = np.arange(idx, idx + window)
+        result = np.append(result, arr[span].mean())
+    return result
+moving_average(Z, window=2)
 
 
+# +
+# 68. How to create a numpy array sequence given only the starting point, length and the step?
+# Difficulty Level: L2
+# Q. Create a numpy array of length 10, starting from 5 and has a step of 3 between consecutive numbers
+
+def generatre_arr(start, step, length):
+    stop = start + step*(length-1)
+    return np.linspace(start=5, stop=stop, num=10)
+
+generatre_arr(start=5, step=3, length=10)
