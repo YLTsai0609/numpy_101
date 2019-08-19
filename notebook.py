@@ -1037,3 +1037,40 @@ def generatre_arr(start, step, length):
     return np.linspace(start=5, stop=stop, num=10)
 
 generatre_arr(start=5, step=3, length=10)
+
+# +
+# 69. How to fill in missing dates in an irregular series of numpy dates?
+# Difficulty Level: L3
+
+# Q. Given an array of a non-continuous sequence of dates. Make it a continuous sequence of dates, by filling in the missing dates.
+dates = np.arange(np.datetime64('2018-02-01'), np.datetime64('2018-02-25'), 2)
+
+import pandas as pd
+start, end = dates[0], dates[-1]
+pidx = pd.period_range(start=start, end=end, freq='D')
+result = pidx.astype(np.datetime64).values
+print(result)
+
+# sol2
+
+result = np.arange(np.datetime64('2018-02-01'), np.datetime64('2018-02-24'), 1)
+print(result)
+
+# +
+# 70. How to create strides from a given 1D array?
+# Difficulty Level: L4
+
+# Q. From the given 1d array arr, generate a 2d matrix using strides, with a window length of 4 and strides of 2, like [[0,1,2,3], [2,3,4,5], [4,5,6,7]..]
+arr = np.arange(15) 
+arr
+
+# More readable
+def get_strides(arr, window_length, strides):
+    result = []
+    end_point_head_idx = len(arr) - window_length
+    for head_idx in range(0, end_point_head_idx, strides):
+        idx_arr = np.arange(0 + head_idx, head_idx + window_length)
+        result.append(arr[idx_arr].tolist())
+    return result
+
+get_strides(arr, window_length=4, strides=2)
