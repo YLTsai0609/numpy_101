@@ -2,12 +2,13 @@
 # ---
 # jupyter:
 #   jupytext:
+#     cell_metadata_json: true
 #     formats: ipynb,py:light
 #     text_representation:
 #       extension: .py
 #       format_name: light
-#       format_version: '1.4'
-#       jupytext_version: 1.1.6
+#       format_version: '1.5'
+#       jupytext_version: 1.3.4
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -835,7 +836,7 @@ np.argsort(a)[-5:]
 # np.argsort 值排序，返回index
 # When to use
 # Eg. 返回特徵重要度最大的index, 用於取出特徵欄位
-# + {}
+# +
 # 49. How to compute the row wise counts of all possible values in an array?
 # Difficulty Level: L4
 # Q. Compute the counts of unique values row-wise.
@@ -879,7 +880,7 @@ for i, k in enumerate(arr):
     one_hot_arr[i, k-1] = 1
 
 one_hot_arr
-# + {}
+# +
 # 52. How to create row numbers grouped by a categorical variable?
 # Difficulty Level: L3
 
@@ -984,7 +985,7 @@ result = np.full(a.shape[0], True)
 unq, unq_idx = np.unique(a, return_index=True)
 result[unq_idx] = False
 print(result)
-# + {}
+# +
 # 59
 # Difficulty Level L3
 
