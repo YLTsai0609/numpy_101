@@ -86,4 +86,51 @@ sp_1, sp_1.toarray(), sp_2, sp_2.toarray(), sp_3, sp_3.toarray()
 #
 #
 
+# +
+# 3 
+# sampling the csr matrix by row
+# Consider csr matrix with shape (User, Items) = (10, 20)
+# Random Sampling 3 users, return a csr matrix format
+
+# https://stackoverflow.com/questions/13843352/what-is-the-fastest-way-to-slice-a-scipy-sparse-matrix
+########## Consider efficient slicing row index of csr
+# Advantages of the CSR format
+# efficient arithmetic operations CSR + CSR, CSR * CSR, etc.
+
+# efficient row slicing
+
+# fast matrix vector products
+########## Begin
+# element = [1, 1, 1, 1, 1, 1] - have interacted items
+# position = [(0,0), (0,2), (1,2), (2,0), (2,1), (2,2)]
+row = np.array([0, 0, 1, 2, 2, 2])
+col = np.array([0, 2, 2, 0, 1, 2])
+data = np.array([1, 1, 1, 1, 1, 1])
+A = csr_matrix((data, (row, col)), shape=(10, 20))
+
+n_sampled_users = 3
+n_total_users = A.shape[0]
+rdn_user_idx = np.random.choice(np.arange(n_total_users),
+                                size=n_sampled_users,replace=False) # without replacement
+print(rdn_user_idx)
+A[rdn_user_idx, :]
+
+# +
+# 4 
+# the attributes indptr and indices
+# element = [1, 1, 1, 1, 1, 1] - have interacted items
+# position = [(0,0), (0,2), (1,2), (2,0), (2,1), (2,2)]
+row = np.array([0, 0, 1, 2, 2, 2])
+col = np.array([0, 2, 2, 0, 1, 2])
+data = np.array([1, 1, 1, 1, 1, 1])
+A = csr_matrix((data, (row, col)), shape=(3,3))
+display(A.todense())
+
+
+for user in range(A.shape[0]):
+        start_usr = A.indptr[user]
+        end_usr = A.indptr[user + 1]
+        print(A.indices[start_usr:end_usr]) # this will show the non zero column per user
+# -
+
 
