@@ -14,6 +14,7 @@
 # ---
 
 from scipy.sparse import csr_matrix
+from scipy import sparse
 import numpy as np
 
 # +
@@ -44,6 +45,9 @@ sp_3 = csr_matrix((data, indices, indptr), shape=(3, 3))
 
 sp_1, sp_1.toarray(), sp_2, sp_2.toarray(), sp_3, sp_3.toarray()
 # -
+
+# 1.5 the method and attributes
+print(dir(sp_1))
 
 # **2 what ia index pointer?**
 #
@@ -131,6 +135,28 @@ for user in range(A.shape[0]):
         start_usr = A.indptr[user]
         end_usr = A.indptr[user + 1]
         print(A.indices[start_usr:end_usr]) # this will show the non zero column per user
+# +
+# %%timeit
+# 5. Knowing the pros and cons of different sparse matrix
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html
+# CSR
+#   Pros: efficient arithmetic operations, efficient row slicing, fast matrix vector products
+#   Cons: slow column sclining operations(Consider CSC), changes to the sparsity structure are expensive(Consider LIL or DOK)
+
+M = sparse.random(5, 10, .2, format='csr')
+# column operation
+M[-1, :] = np.arange(10)
 # -
+
+
+# %%timeit
+M = sparse.random(5,10,.2,format='csr')
+M1=M.tolil(); M1[-1,:] = np.arange(10); M = M1.tocsr()
+
+
+# %%timeit
+M = sparse.random(5,10,.2,format='lil')
+M[-1,:] = np.arange(10)
+M = M.tocsr()
 
 
